@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https: http:; style-src 'self' 'unsafe-inline'; script-src 'self'">
+  <title>Arta Gustului Media</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="guide.css">
+</head>
+<body>
+  <aside class="rail">
+    <div class="brand" title="Arta Gustului">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+        <circle cx="24" cy="24" r="21"/>
+        <path d="M17 14v9a3 3 0 0 0 3 3v9M17 14v6M20 14v6M23 14v9a3 3 0 0 1-3 3"/>
+        <path d="M29 33V15l6-1.5v14"/><circle cx="27" cy="33" r="2.4"/><circle cx="33" cy="27.5" r="2.4"/>
+      </svg>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn active" data-view="home"><span data-icon="home"></span><b>Acasă</b></button>
+      <button class="nav-btn" data-site="spotify"><span data-icon="spotify"></span><b>Spotify</b></button>
+      <button class="nav-btn" data-site="youtube"><span data-icon="youtube"></span><b>YouTube</b></button>
+      <button class="nav-btn" data-view="browser"><span data-icon="globe"></span><b>Browser</b></button>
+      <button class="nav-btn" data-view="phone"><span data-icon="phone"></span><b>Telefon</b></button>
+      <button class="nav-btn" data-view="guide"><span data-icon="stereo"></span><b>Ghid LG</b></button>
+      <button class="nav-btn" data-view="info"><span data-icon="info"></span><b>Info</b></button>
+      <button class="nav-btn" data-view="settings"><span data-icon="settings"></span><b>Setări</b></button>
+    </nav>
+    <button class="mini-guide" id="miniGuide" title="Cum pornesc sistemul LG? (ghid animat)">
+      <svg viewBox="0 0 60 44" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round">
+        <rect x="4" y="2" width="52" height="40" rx="5"/>
+        <rect class="mg-lcd" x="15" y="7" width="30" height="9" rx="2"/>
+        <rect class="mg-btn" x="7" y="30" width="6" height="5" rx="1.5"/>
+        <rect x="7" y="9" width="6" height="5" rx="1.5"/><rect x="7" y="16" width="6" height="5" rx="1.5"/><rect x="7" y="23" width="6" height="5" rx="1.5"/>
+        <circle cx="30" cy="28" r="8"/><circle cx="30" cy="28" r="4"/>
+      </svg>
+      <span>PORTABLE</span>
+    </button>
+    <div class="rail-actions">
+      <button class="icon-btn" id="btnFullscreen" title="Ecran complet (F11)"><span data-icon="shrink"></span></button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="tb-title"><span id="viewTitle">Acasă</span></div>
+      <div class="tb-right">
+        <button class="chip" id="chipOutput" title="Ieșirea audio activă"><span data-icon="speaker"></span><span id="chipOutputName">…</span></button>
+        <div class="volume" title="Volumul Windows">
+          <button class="icon-btn sm" id="volMute"><span data-icon="volume"></span></button>
+          <button class="icon-btn sm" id="volDown"><span data-icon="minus"></span></button>
+          <input type="range" id="volSlider" min="0" max="100" step="1" value="50">
+          <button class="icon-btn sm" id="volUp"><span data-icon="plus"></span></button>
+          <span class="vol-val" id="volVal">50</span>
+        </div>
+        <div class="clock" id="clock">--:--</div>
+        <button class="exit-btn" id="btnQuit" title="Închide aplicația"><span data-icon="power"></span>Ieșire</button>
+      </div>
+    </header>
+
+    <!-- ACASA -->
+    <section class="view active" id="view-home">
+      <div class="home">
+        <div class="home-left">
+          <div class="hero">
+            <p class="eyebrow">Arta Gustului · Centru multimedia</p>
+            <h1 id="greeting">Bună ziua</h1>
+            <p class="hero-date" id="heroDate"></p>
+          </div>
+          <div class="tiles">
+            <button class="tile t-spotify" data-site="spotify"><span data-icon="spotify"></span><b>Spotify</b><small>Playlisturi pentru sală</small></button>
+            <button class="tile t-youtube" data-site="youtube"><span data-icon="youtube"></span><b>YouTube</b><small>Muzică și video</small></button>
+            <button class="tile" data-view="phone"><span data-icon="phone"></span><b>De pe telefon</b><small>Bluetooth · Spotify Connect</small></button>
+            <button class="tile" data-view="browser"><span data-icon="globe"></span><b>Browser</b><small>Internet · extensii</small></button>
+            <button class="tile" data-view="settings" data-scroll="audio"><span data-icon="speaker"></span><b>Ieșire audio</b><small id="tileOutput">Alege difuzoarele</small></button>
+            <button class="tile" data-view="info"><span data-icon="info"></span><b>Info</b><small>Cum funcționează totul</small></button>
+          </div>
+          <div class="status-row">
+            <div class="stat"><span data-icon="plug"></span><div><small>Conexiune LG</small><b>Cablu → PORTABLE</b></div></div>
+            <div class="stat"><span data-icon="bluetooth"></span><div><small>Telefon</small><b id="statPhone">Neconectat</b></div></div>
+            <div class="stat"><span data-icon="wifi"></span><div><small>Telecomandă</small><b id="statRemote">—</b></div></div>
+          </div>
+        </div>
+        <div class="home-right card">
+          <div class="card-head">
+            <div><p class="eyebrow">Ghid rapid · mereu aici</p><h2>Pornește sistemul LG</h2></div>
+            <button class="btn ghost" data-view="guide">Ghid complet</button>
+          </div>
+          <div id="homeGuide"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BROWSER -->
+    <section class="view" id="view-browser">
+      <div class="browser">
+        <div class="tabs" id="tabs">
+          <div class="tab-list" id="tabList"></div>
+          <button class="icon-btn sm" id="tabNew" title="Filă nouă"><span data-icon="plus"></span></button>
+        </div>
+        <div class="toolbar">
+          <button class="icon-btn" id="navBack" title="Înapoi"><span data-icon="back"></span></button>
+          <button class="icon-btn" id="navFwd" title="Înainte"><span data-icon="forward"></span></button>
+          <button class="icon-btn" id="navReload" title="Reîncarcă"><span data-icon="reload"></span></button>
+          <button class="icon-btn" id="navHome" title="Pagina de start"><span data-icon="home"></span></button>
+          <form class="address" id="addressForm">
+            <span data-icon="search"></span>
+            <input id="address" spellcheck="false" placeholder="Caută pe Google sau scrie o adresă">
+          </form>
+          <div class="bookmarks">
+            <button class="bm" data-site="spotify"><span data-icon="spotify"></span>Spotify</button>
+            <button class="bm" data-site="youtube"><span data-icon="youtube"></span>YouTube</button>
+            <button class="bm" data-url="https://music.youtube.com"><span data-icon="music"></span>YT Music</button>
+          </div>
+          <button class="icon-btn" id="btnExt" title="Extensii"><span data-icon="puzzle"></span></button>
+        </div>
+        <div class="webviews" id="webviews">
+          <div class="web-empty" id="webEmpty">
+            <span data-icon="globe"></span>
+            <p>Deschide Spotify, YouTube sau orice site.</p>
+          </div>
+        </div>
+        <div class="popover" id="extPopover" hidden>
+          <div class="pop-head"><b>Extensii</b><button class="icon-btn sm" data-close-pop><span data-icon="close"></span></button></div>
+          <div class="ext-list" id="extPopList"></div>
+          <div class="pop-actions">
+            <button class="btn" id="extStore"><span data-icon="store"></span>Magazinul Chrome</button>
+            <button class="btn ghost" data-view="settings" data-scroll="ext">Gestionează</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TELEFON -->
+    <section class="view" id="view-phone">
+      <div class="page">
+        <div class="page-head">
+          <p class="eyebrow">Redă muzica de pe telefon</p>
+          <h1>Conectează telefonul</h1>
+          <p class="lead">Alege una dintre cele trei metode. Sunetul trece prin laptop către sistemul LG.</p>
+        </div>
+        <div class="methods">
+          <article class="card method primary">
+            <div class="m-badge">Recomandat</div>
+            <div class="m-visual">
+              <svg viewBox="0 0 300 110" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="20" y="18" width="40" height="74" rx="8"/><path d="M34 26h12"/>
+                <path class="flow" d="M72 55h70" stroke-dasharray="4 7"/>
+                <path d="M100 40l12 12-6 6V34l6 6-12 12" class="accent"/>
+                <rect x="150" y="28" width="56" height="38" rx="4"/><path d="M142 76h72l-6-10h-60Z"/>
+                <path class="flow" d="M222 55h20" stroke-dasharray="4 7"/>
+                <rect x="250" y="20" width="36" height="72" rx="5"/><rect x="256" y="28" width="24" height="9" rx="2"/><circle cx="268" cy="66" r="10"/>
+              </svg>
+            </div>
+            <h3><span data-icon="bluetooth"></span> Bluetooth</h3>
+            <ol class="steps">
+              <li><b>1</b><span>Pe laptop: <i>Setări Bluetooth → Adaugă dispozitiv</i> și asociază telefonul (o singură dată).</span></li>
+              <li><b>2</b><span>Apasă <i>Conectează</i> lângă telefon, mai jos.</span></li>
+              <li><b>3</b><span>Pornește muzica pe telefon. Ea se aude în boxele LG.</span></li>
+            </ol>
+            <div class="bt-list" id="btList"><p class="muted">Se caută telefoane asociate…</p></div>
+            <div class="row">
+              <button class="btn" id="btRefresh"><span data-icon="reload"></span>Reîmprospătează</button>
+              <button class="btn ghost" id="btSettings"><span data-icon="settings"></span>Setări Bluetooth</button>
+            </div>
+          </article>
+
+          <article class="card method">
+            <div class="m-visual">
+              <svg viewBox="0 0 300 110" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="20" y="18" width="40" height="74" rx="8"/><circle cx="40" cy="52" r="11" class="accent"/>
+                <path d="M34 50c4-1.4 8-1 11 .8M35 54c3-.8 6-.5 8.4.8" class="accent"/>
+                <path class="flow" d="M72 55h70" stroke-dasharray="4 7"/>
+                <path d="M96 38a14 14 0 0 1 20 0M100 43a8 8 0 0 1 12 0" />
+                <rect x="150" y="28" width="56" height="38" rx="4"/><path d="M142 76h72l-6-10h-60Z"/>
+                <circle cx="178" cy="47" r="10" class="accent"/>
+              </svg>
+            </div>
+            <h3><span data-icon="spotify"></span> Spotify Connect</h3>
+            <ol class="steps">
+              <li><b>1</b><span>Deschide <i>Spotify</i> în această aplicație și conectează-te cu același cont ca pe telefon.</span></li>
+              <li><b>2</b><span>Pe telefon, în Spotify, atinge iconița <i>dispozitive</i> (jos, sub melodie).</span></li>
+              <li><b>3</b><span>Alege <i>Web Player (Chrome)</i>. Telefonul devine telecomandă.</span></li>
+            </ol>
+            <div class="row"><button class="btn" data-site="spotify"><span data-icon="spotify"></span>Deschide Spotify</button></div>
+          </article>
+
+          <article class="card method">
+            <div class="qr-wrap"><div class="qr" id="qrBox"></div></div>
+            <h3><span data-icon="qr"></span> Telecomandă din telefon</h3>
+            <ol class="steps">
+              <li><b>1</b><span>Telefonul trebuie să fie pe <i>aceeași rețea Wi-Fi</i> ca laptopul.</span></li>
+              <li><b>2</b><span>Scanează codul QR cu camera telefonului.</span></li>
+              <li><b>3</b><span>Controlezi volumul, pauza și melodia următoare.</span></li>
+            </ol>
+            <p class="muted mono" id="remoteUrl"></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- GHID -->
+    <section class="view" id="view-guide">
+      <div class="page guide-page">
+        <div class="page-head row-between">
+          <div>
+            <p class="eyebrow">LG 3CD Changer System · MCD</p>
+            <h1>Pornire și conectare la PORTABLE</h1>
+          </div>
+          <div class="seg-toggle" id="sideToggle" title="Pe ce parte a laptopului este mufa de căști?">
+            <span class="muted">Mufa 🎧 pe laptop:</span>
+            <button data-side="left">Stânga</button><button data-side="right">Dreapta</button>
+          </div>
+        </div>
+        <div class="card guide-card"><div id="fullGuide"></div></div>
+      </div>
+    </section>
+
+    <!-- INFO -->
+    <section class="view" id="view-info">
+      <div class="page">
+        <div class="page-head">
+          <p class="eyebrow">Info</p>
+          <h1>Cum circulă sunetul</h1>
+        </div>
+        <div class="card flow-card">
+          <svg class="flow-diagram" viewBox="0 0 1000 220" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <g class="fd-node"><rect x="20" y="40" width="150" height="140" rx="18"/>
+              <rect x="64" y="62" width="40" height="70" rx="7"/><path d="M78 70h12"/>
+              <path class="accent" d="M118 84l10 10-5 5V79l5 5-10 10"/>
+              <text x="95" y="160" text-anchor="middle">Telefon</text></g>
+            <path class="fd-flow" d="M178 110h62"/>
+            <g class="fd-node"><rect x="248" y="40" width="190" height="140" rx="18"/>
+              <rect x="296" y="62" width="94" height="58" rx="5"/><path d="M284 132h118l-8-12h-102Z"/>
+              <text x="343" y="160" text-anchor="middle">Laptop · aplicația</text></g>
+            <path class="fd-flow" d="M446 110h62"/>
+            <g class="fd-node"><rect x="516" y="40" width="160" height="140" rx="18"/>
+              <path class="accent" d="M560 64v34M560 98a8 8 0 0 0 0 0"/><rect class="accent" x="553" y="98" width="14" height="22" rx="3"/><path class="accent" d="M560 120v14"/>
+              <path d="M590 70c40 0 40 60 0 60" stroke-dasharray="4 6"/>
+              <text x="596" y="160" text-anchor="middle">Cablu jack 3.5 mm</text></g>
+            <path class="fd-flow" d="M684 110h62"/>
+            <g class="fd-node"><rect x="754" y="40" width="226" height="140" rx="18"/>
+              <rect x="790" y="58" width="76" height="82" rx="8"/><rect x="802" y="66" width="52" height="14" rx="3"/><circle cx="828" cy="112" r="17"/>
+              <path d="M886 86a24 24 0 0 1 0 44M902 74a42 42 0 0 1 0 68" class="accent"/>
+              <text x="867" y="160" text-anchor="middle">LG · PORTABLE → boxe</text></g>
+          </svg>
+        </div>
+
+        <h2 class="section-title">Nu se aude nimic? Verifică în ordine</h2>
+        <div class="checks">
+          <div class="check-card"><div class="cc-n">1</div><span data-icon="power"></span><b>LG pornit</b><p>Afișajul albastru e aprins. Dacă nu, apasă ⏻/I.</p></div>
+          <div class="check-card"><div class="cc-n">2</div><span data-icon="stereo"></span><b>Afișaj: PORTABLE</b><p>Apasă butonul PORTABLE până apare textul.</p></div>
+          <div class="check-card"><div class="cc-n">3</div><span data-icon="jack"></span><b>Cablul e băgat complet</b><p>Laptop: mufa 🎧. LG: PORT. IN (sus, nu USB).</p></div>
+          <div class="check-card"><div class="cc-n">4</div><span data-icon="speaker"></span><b>Ieșirea corectă</b><p>În Setări alege „Speakers / Difuzoare”, nu HDMI.</p></div>
+          <div class="check-card"><div class="cc-n">5</div><span data-icon="volume"></span><b>Volumul nu e 0</b><p>Laptop 80–100%, apoi reglezi din butonul LG.</p></div>
+        </div>
+
+        <h2 class="section-title">Pe scurt</h2>
+        <div class="facts">
+          <div class="fact"><span data-icon="spotify"></span><b>Spotify</b><p>Contul rămâne logat. Playlisturile pornesc din fila Spotify.</p></div>
+          <div class="fact"><span data-icon="youtube"></span><b>YouTube</b><p>Videoclipurile pot rula pe tot ecranul (dublu-clic pe video).</p></div>
+          <div class="fact"><span data-icon="puzzle"></span><b>Extensii</b><p>Instalează din Magazinul Chrome, de ex. un blocant de reclame.</p></div>
+          <div class="fact"><span data-icon="keyboard"></span><b>Taste utile</b><p><kbd>F11</kbd> ecran complet · <kbd>Ctrl</kbd>+<kbd>T</kbd> filă nouă · <kbd>Ctrl</kbd>+<kbd>W</kbd> închide fila</p></div>
+          <div class="fact"><span data-icon="phone"></span><b>Telefon</b><p>Bluetooth, Spotify Connect sau telecomanda prin QR.</p></div>
+          <div class="fact"><span data-icon="alert"></span><b>Atenție la volum</b><p>Nu porni LG-ul cu volumul la maxim. Crește-l treptat.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETARI -->
+    <section class="view" id="view-settings">
+      <div class="page">
+        <div class="page-head"><p class="eyebrow">Setări</p><h1>Audio și aplicație</h1></div>
+
+        <div class="card" id="sec-audio">
+          <div class="card-head"><div><h2>Ieșire audio</h2><p class="muted">Alege pe unde iese sunetul. Pentru sistemul LG: difuzoarele/căștile laptopului (mufa 🎧).</p></div>
+            <div class="row"><button class="btn ghost" id="devRefresh"><span data-icon="reload"></span>Reîmprospătează</button><button class="btn" id="soundTest"><span data-icon="music"></span>Test sunet</button></div></div>
+          <div class="devices" id="devices"></div>
+          <label class="check-row"><input type="checkbox" id="showVirtual"> Arată și dispozitivele virtuale</label>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div><h2>Volum</h2><p class="muted">Volumul Windows. Nivelul din sală se reglează din butonul VOLUME al LG-ului.</p></div></div>
+          <div class="big-volume">
+            <button class="icon-btn lg" id="bigMute"><span data-icon="volume"></span></button>
+            <input type="range" id="bigVol" min="0" max="100" step="1">
+            <span class="big-val" id="bigVolVal">50%</span>
+          </div>
+          <div class="presets">
+            <button class="btn ghost" data-vol="40">Liniște · 40%</button>
+            <button class="btn ghost" data-vol="70">Fundal · 70%</button>
+            <button class="btn ghost" data-vol="90">Recomandat LG · 90%</button>
+            <button class="btn ghost" data-vol="100">Maxim · 100%</button>
+          </div>
+        </div>
+
+        <div class="card" id="sec-ext">
+          <div class="card-head"><div><h2>Extensii browser</h2><p class="muted">Extensiile din Magazinul Chrome se instalează cu butonul „Adaugă în Chrome”.</p></div>
+            <div class="row"><button class="btn" id="extStore2"><span data-icon="store"></span>Magazinul Chrome</button><button class="btn ghost" id="extUnpacked"><span data-icon="folder"></span>Din folder</button></div></div>
+          <div class="ext-list" id="extList"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div><h2>Aplicație</h2></div></div>
+          <div class="settings-grid">
+            <label class="switch-row"><span><b>Pornește pe tot ecranul</b><small>Aplicația se deschide în modul ecran complet.</small></span><input type="checkbox" id="setFullscreen"><i></i></label>
+            <label class="switch-row"><span><b>Pornește odată cu Windows</b><small>Se deschide automat după pornirea laptopului.</small></span><input type="checkbox" id="setAutostart"><i></i></label>
+            <div class="switch-row"><span><b>Mufa de căști a laptopului</b><small>Folosită în animațiile ghidului.</small></span>
+              <div class="seg-toggle" id="sideToggle2"><button data-side="left">Stânga</button><button data-side="right">Dreapta</button></div></div>
+            <form class="switch-row" id="homeUrlForm"><span><b>Pagina de start a browserului</b><small>Se deschide la o filă nouă.</small></span>
+              <input class="text-input" id="setHomeUrl" spellcheck="false"></form>
+            <div class="switch-row"><span><b>Telecomandă telefon</b><small id="remoteHint">Cod de acces nou: telefoanele vechi pierd accesul.</small></span>
+              <button class="btn ghost" id="remoteRegen"><span data-icon="qr"></span>Cod nou</button></div>
+          </div>
+        </div>
+
+        <div class="card about">
+          <div><h2>Despre</h2><p class="muted" id="aboutText"></p></div>
+          <div class="row">
+            <button class="btn ghost" id="btnMinimize"><span data-icon="minimize"></span>Minimizează</button>
+            <button class="btn danger" id="btnQuit2"><span data-icon="power"></span>Ieși din aplicație</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ghid suprapus (de oriunde) -->
+  <div class="overlay" id="guideOverlay" hidden>
+    <div class="overlay-card">
+      <div class="card-head">
+        <div><p class="eyebrow">Ghid animat</p><h2>Pornește sistemul LG și treci pe PORTABLE</h2></div>
+        <button class="icon-btn" data-close-overlay><span data-icon="close"></span></button>
+      </div>
+      <div id="overlayGuide"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="quitOverlay" hidden>
+    <div class="overlay-card small">
+      <span class="quit-ico" data-icon="power"></span>
+      <h2>Ieși din aplicație?</h2>
+      <p class="muted">Muzica se oprește. Sistemul LG rămâne pornit.</p>
+      <div class="row center">
+        <button class="btn ghost" data-close-overlay>Rămân</button>
+        <button class="btn danger" id="quitYes">Ieșire</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts"></div>
+
+  <script src="icons.js"></script>
+  <script src="guide.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

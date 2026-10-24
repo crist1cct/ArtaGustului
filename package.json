@@ -1,0 +1,64 @@
+{
+  "name": "arta-gustului-media",
+  "productName": "Arta Gustului Media",
+  "version": "1.0.0",
+  "description": "Centru multimedia pentru restaurantul Arta Gustului",
+  "author": "Arta Gustului",
+  "main": "src/main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "icon": "python tools/make_icon.py",
+    "dist": "electron-builder --win --x64"
+  },
+  "dependencies": {
+    "electron-chrome-web-store": "^0.13.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "electron": "https://github.com/castlabs/electron-releases#v43.8.3+wvcus",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "md.artagustului.media",
+    "productName": "Arta Gustului Media",
+    "electronDist": "node_modules/electron/dist",
+    "electronVersion": "43.8.3",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "helper",
+        "to": "helper"
+      }
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Arta Gustului Media",
+      "artifactName": "ArtaGustului-Media-Setup-${version}.exe"
+    },
+    "portable": {
+      "artifactName": "ArtaGustului-Media-Portabil-${version}.exe"
+    }
+  }
+}

@@ -1,0 +1,147 @@
+/* Ghidul animat LG - doar contururi */
+.guide { display: flex; flex-direction: column; gap: 14px; --g-line: rgba(243, 230, 207, .5); --g-dim: rgba(243, 230, 207, .22); }
+.g-stage { position: relative; flex: 1; min-height: 160px; display: flex; align-items: center; justify-content: center; }
+.g-scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+.g-scene { fill: none; stroke: var(--g-line); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.g-scene * { vector-effect: non-scaling-stroke; }
+.g-scene text { stroke: none; fill: var(--g-line); font-family: "Segoe UI", sans-serif; }
+.g-scene .t-logo { font-size: 20px; font-weight: 700; fill: var(--text); }
+.g-scene .t-small { font-size: 9px; letter-spacing: .18em; }
+.g-scene .t-btn { font-size: 8.5px; font-weight: 600; letter-spacing: .03em; }
+.g-scene .t-btn-s { font-size: 6.8px; }
+.g-scene .t-co { font-size: 11px; font-weight: 700; letter-spacing: .12em; fill: #1a1408; }
+.g-scene .t-label { font-size: 11px; font-weight: 600; letter-spacing: .14em; fill: var(--gold); }
+.g-scene .t-hl { fill: var(--gold); font-size: 10px; }
+.g-scene .t-dim { fill: var(--g-dim); font-size: 10px; }
+.g-scene .t-vol { fill: var(--g-dim); letter-spacing: .3em; }
+.g-scene .dot { fill: var(--g-line); }
+
+.g-scene .lg .body { stroke: rgba(243, 230, 207, .7); stroke-width: 1.8; }
+.g-scene .wing, .g-scene .band, .g-scene .door rect, .g-scene .lt-keys, .g-scene .lt-ui, .g-scene .lcd-deco { stroke: var(--g-dim); }
+.g-scene .ico-s { stroke: var(--g-dim); }
+.g-scene .lt-ui { opacity: .7; }
+
+/* afisaj VFD */
+.g-scene .lcd-win { stroke: var(--g-line); }
+.g-scene .lcd { font-family: Consolas, "Courier New", monospace; font-size: 25px; letter-spacing: 4px; fill: var(--cyan); font-style: italic; opacity: 0; transition: opacity .3s; filter: drop-shadow(0 0 5px rgba(116, 214, 255, .8)); }
+.g-scene .lcd-deco { opacity: 0; transition: opacity .3s, stroke .3s; }
+.g-scene.lcd-on .lcd { opacity: 1; }
+.g-scene.lcd-on .lcd-deco { opacity: 1; stroke: rgba(116, 214, 255, .7); }
+.g-scene.lcd-on .lcd-win { stroke: rgba(116, 214, 255, .55); }
+.g-scene.lcd-on .knob { stroke: rgba(116, 214, 255, .5); }
+
+/* elemente scoase in evidenta */
+.g-scene .btn rect, .g-scene .knob circle, .g-scene .lg-jack, .g-scene .lt-jack { transition: stroke .3s, fill .3s; }
+.g-scene .hl { stroke: var(--gold); stroke-width: 2; }
+
+.g-scene .tap { stroke: var(--gold); stroke-width: 2; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.g-scene .co { opacity: 0; transition: opacity .4s; }
+.g-scene .co rect { fill: var(--gold); stroke: none; }
+.g-scene .co path { stroke: var(--gold); stroke-width: 1.4; stroke-dasharray: 3 4; }
+
+.g-scene .cable { stroke: var(--gold-2); stroke-width: 3; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.g-scene .plug-end { stroke: var(--gold-2); stroke-width: 2.2; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.g-scene .bubble { opacity: 0; transition: opacity .5s; }
+.g-scene .b-ring { stroke: var(--gold); stroke-width: 1.6; fill: rgba(12, 11, 10, .92); }
+.g-scene .bubble .lead { stroke: var(--gold); stroke-dasharray: 3 4; }
+.g-scene .plug-in { stroke: var(--gold-2); stroke-width: 3; transform-box: fill-box; transform-origin: center; opacity: 0; }
+.g-scene .hp { stroke: var(--gold); }
+
+.g-scene .vol-arc { stroke: var(--cyan); stroke-width: 3; stroke-dasharray: 0 100; opacity: 0; transition: opacity .4s; }
+.g-scene .knob { transform-box: view-box; transform-origin: 640px 298px; transition: transform .6s; }
+.g-scene .knob-mark { stroke: var(--gold-2); stroke-width: 2.4; }
+.g-scene .lt-eq rect { stroke: none; fill: var(--gold); opacity: 0; transform-box: fill-box; transform-origin: bottom; }
+.g-scene .lt-vol { opacity: 0; transition: opacity .4s; }
+.g-scene .lt-vol > rect:first-child { fill: rgba(12, 11, 10, .92); stroke: var(--g-line); }
+.g-scene .vol-track { stroke: none; fill: var(--g-dim); }
+.g-scene .vol-fill { stroke: none; fill: var(--gold); transform-box: fill-box; transform-origin: left; transform: scaleX(0); }
+.g-scene .waves path, .g-scene .notes { stroke: var(--gold); opacity: 0; }
+.g-scene .phone-fig { opacity: 0; transition: opacity .5s; }
+.g-scene .phone-fig .bt { stroke: var(--gold); }
+.g-scene .phone-fig .bt-wave { stroke: var(--gold); }
+
+/* ---- pasul 1: pornire ---- */
+.g-scene[data-step="1"] .btn-power rect { stroke: var(--gold); stroke-width: 2.2; }
+.g-scene[data-step="1"] .tap-power { animation: tap 2.2s ease-out .4s infinite; }
+.g-scene[data-step="1"] .tap-power.t2 { animation-delay: .9s; }
+.g-scene[data-step="1"] .co-power { opacity: 1; }
+.g-scene[data-step="1"] .btn-power rect { animation: press 2.2s ease .5s infinite; }
+
+/* ---- pasul 2: cablu ---- */
+.g-scene[data-step="2"] .cable { animation: draw 2.4s ease-in-out .6s forwards; }
+.g-scene[data-step="2"] .plug-end { animation: pop .5s ease-out 2.9s forwards; }
+.g-scene[data-step="2"] .plug-lt { animation-delay: .5s; }
+.g-scene[data-step="2"] .bubble { opacity: 1; }
+.g-scene[data-step="2"] .plug-in { animation: plugIn 2.8s ease-in-out .6s infinite; }
+.g-scene[data-step="2"] .lt-jack, .g-scene[data-step="2"] .lg-jack { stroke: var(--gold); stroke-width: 2.2; }
+.g-scene[data-step="3"] .cable, .g-scene[data-step="4"] .cable, .g-scene[data-step="5"] .cable { stroke-dashoffset: 0; stroke-opacity: .55; stroke-width: 2.2; }
+.g-scene[data-step="3"] .plug-end, .g-scene[data-step="4"] .plug-end, .g-scene[data-step="5"] .plug-end { opacity: .55; }
+
+/* ---- pasul 3: PORTABLE ---- */
+.g-scene[data-step="3"] .btn-portable rect { stroke: var(--gold); stroke-width: 2.2; animation: press 2.6s ease 1.2s infinite; }
+.g-scene[data-step="3"] .btn-portable text { fill: var(--gold-2); }
+.g-scene[data-step="3"] .tap-portable { animation: tap 2.6s ease-out 1.1s infinite; }
+.g-scene[data-step="3"] .tap-portable.t2 { animation-delay: 1.6s; }
+.g-scene[data-step="3"] .co-portable { opacity: 1; }
+
+/* ---- pasul 4: volum ---- */
+.g-scene[data-step="4"] .knob { animation: turn 4.6s ease-in-out .4s forwards; }
+.g-scene[data-step="4"] .vol-arc { opacity: 1; animation: arc 4.6s ease-in-out .4s forwards; }
+.g-scene[data-step="4"] .co-volume { opacity: 1; }
+.g-scene[data-step="4"] .ring { stroke: var(--gold); }
+.g-scene[data-step="4"] .lt-vol { opacity: 1; }
+.g-scene[data-step="4"] .vol-fill { animation: volFill 1.6s ease-out .3s forwards; }
+.g-scene[data-step="5"] .knob { transform: rotate(55deg); }
+
+/* ---- pasul 5: muzica ---- */
+.g-scene[data-step="5"] .lt-eq rect { opacity: .85; animation: eq .9s ease-in-out infinite alternate; }
+.g-scene[data-step="5"] .waves path { animation: wave 1.8s ease-out infinite; }
+.g-scene[data-step="5"] .waves path:nth-child(2) { animation-delay: .3s; }
+.g-scene[data-step="5"] .waves path:nth-child(3) { animation-delay: .6s; }
+.g-scene[data-step="5"] .notes { animation: note 3s ease-in-out infinite; }
+.g-scene[data-step="5"] .phone-fig { opacity: 1; }
+.g-scene[data-step="5"] .phone-fig .bt-wave { animation: dash 1s linear infinite; }
+
+@keyframes tap { 0% { opacity: 0; transform: scale(.5); } 15% { opacity: 1; } 70%, 100% { opacity: 0; transform: scale(1.9); } }
+@keyframes press { 0%, 14% { fill: transparent; } 20%, 34% { fill: rgba(216, 179, 110, .35); } 44%, 100% { fill: transparent; } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes pop { 0% { opacity: 0; transform: scale(2.4); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes plugIn { 0% { opacity: 0; transform: scale(3); } 45% { opacity: 1; transform: scale(1); } 80% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
+@keyframes turn { 0% { transform: rotate(-40deg); } 75%, 100% { transform: rotate(55deg); } }
+@keyframes arc { 0% { stroke-dasharray: 8 100; } 75%, 100% { stroke-dasharray: 42 100; } }
+@keyframes volFill { to { transform: scaleX(.85); } }
+@keyframes eq { 0% { transform: scaleY(.25); } 100% { transform: scaleY(1); } }
+@keyframes wave { 0% { opacity: 0; transform: translateX(-10px); } 30% { opacity: .9; } 100% { opacity: 0; transform: translateX(14px); } }
+@keyframes note { 0% { opacity: 0; transform: translateY(14px); } 30%, 60% { opacity: .9; } 100% { opacity: 0; transform: translateY(-22px); } }
+
+.guide.paused .g-scene * { animation-play-state: paused !important; }
+
+/* text pas */
+.g-caption { display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: center; }
+.g-num { display: flex; align-items: baseline; gap: 6px; font-family: var(--font-d); }
+.g-n { font-size: 54px; font-weight: 200; color: var(--gold); line-height: 1; font-variant-numeric: tabular-nums; }
+.g-of { color: var(--muted); font-size: 15px; }
+.g-title { font-size: 24px; margin-bottom: 4px; }
+.g-text { color: #ded2bd; font-size: 16px; }
+.g-text b { color: var(--gold-2); font-weight: 600; }
+.g-tip { color: var(--muted); font-size: 14px; margin-top: 6px; }
+.g-tip::before { content: "Sfat · "; color: var(--gold); }
+.g-ctrl { display: flex; gap: 6px; }
+.g-btn { width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line-2); display: grid; place-items: center; color: var(--text); }
+.g-btn:hover { border-color: var(--gold); color: var(--gold-2); }
+.g-progress { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.g-seg { text-align: left; display: flex; flex-direction: column; gap: 8px; color: var(--muted); font-size: 12px; }
+.g-seg i { display: block; height: 3px; border-radius: 2px; background: var(--gold); width: 0; box-shadow: inset 0 0 0 100vmax transparent; }
+.g-seg { --track: rgba(255, 255, 255, .08); }
+.g-seg i { background: linear-gradient(var(--gold), var(--gold)); }
+.g-seg::before { content: ""; display: block; height: 3px; border-radius: 2px; background: var(--track); margin-bottom: -11px; }
+.g-seg.on { color: var(--text); }
+.g-seg.done { color: var(--gold); }
+
+.guide-compact .g-caption { gap: 16px; }
+.guide-compact .g-n { font-size: 40px; }
+.guide-compact .g-title { font-size: 19px; }
+.guide-compact .g-text { font-size: 14.5px; }
+.guide-compact .g-btn { width: 40px; height: 40px; }
+.guide-compact .g-seg span { display: none; }
