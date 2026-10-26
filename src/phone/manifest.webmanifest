@@ -1,0 +1,10 @@
+{
+  "name": "Arta Gustului · Ospătar",
+  "short_name": "Arta Gustului",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0c0b0a",
+  "theme_color": "#0c0b0a",
+  "icons": [{ "src": "/icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }]
+}

@@ -115,7 +115,7 @@
 @keyframes wave { 0% { opacity: 0; transform: translateX(-10px); } 30% { opacity: .9; } 100% { opacity: 0; transform: translateX(14px); } }
 @keyframes note { 0% { opacity: 0; transform: translateY(14px); } 30%, 60% { opacity: .9; } 100% { opacity: 0; transform: translateY(-22px); } }
 
-.guide.paused .g-scene * { animation-play-state: paused !important; }
+.guide.paused .g-scene *, .guide.offscreen .g-scene * { animation-play-state: paused !important; }
 
 /* text pas */
 .g-caption { display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: center; }

@@ -1,7 +1,7 @@
 {
   "name": "arta-gustului-media",
   "productName": "Arta Gustului Media",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Centru multimedia pentru restaurantul Arta Gustului",
   "author": "Arta Gustului",
   "main": "src/main.js",
@@ -12,6 +12,7 @@
     "dist": "electron-builder --win --x64"
   },
   "dependencies": {
+    "@ghostery/adblocker-electron": "^2.20.1",
     "electron-chrome-web-store": "^0.13.0",
     "qrcode": "^1.5.4"
   },
@@ -35,6 +36,10 @@
       {
         "from": "helper",
         "to": "helper"
+      },
+      {
+        "from": "vendor",
+        "to": "vendor"
       }
     ],
     "win": {
@@ -42,16 +47,21 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         },
         {
           "target": "portable",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ]
     },
     "nsis": {
       "oneClick": false,
+      "deleteAppDataOnUninstall": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "shortcutName": "Arta Gustului Media",

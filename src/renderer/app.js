@@ -7,7 +7,7 @@ const SITES = {
   spotify: { url: 'https://open.spotify.com/', host: 'open.spotify.com' },
   youtube: { url: 'https://www.youtube.com/', host: 'youtube.com' },
 };
-const TITLES = { home: 'Acasă', browser: 'Browser', phone: 'Telefon', guide: 'Ghid sistem LG', info: 'Info', settings: 'Setări' };
+const TITLES = { home: 'Acasă', casa: 'Casă',browser: 'Browser', phone: 'Telefon', guide: 'Ghid sistem LG', info: 'Info', settings: 'Setări' };
 
 let settings = {};
 let currentView = 'home';
@@ -34,6 +34,7 @@ function show(view, opts = {}) {
   updateNavActive();
   if (view === 'browser' && !tabs.length) createTab(settings.homeUrl || 'https://www.google.com');
   if (view === 'phone') { loadBt(); loadRemote(); }
+  if (view === 'casa') window.posOnShow?.();
   if (view === 'settings') { loadDevices(); loadExtensions(); }
   if (opts.scroll) setTimeout(() => $(`#sec-${opts.scroll}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
 }
@@ -196,12 +197,7 @@ function normalizeUrl(input) {
 }
 
 function createTab(url, { activate = true } = {}) {
-  const tab = { id: ++tabSeq, url, title: 'Se încarcă…', favicon: null, loading: true, playing: false };
-  const wv = document.createElement('webview');
-  wv.setAttribute('partition', 'persist:arta-web');
-  wv.setAttribute('allowpopups', '');
-  wv.setAttribute('src', url);
-  tab.wv = wv;
+  const tab = { id: ++tabSeq, url, title: 'Se încarcă…', favicon: null, loading: true, playing: false, lastActive: Date.now() };
 
   const el = document.createElement('div');
   el.className = 'tab loading';
@@ -210,6 +206,44 @@ function createTab(url, { activate = true } = {}) {
   el.querySelector('.tab-x').onclick = () => closeTab(tab);
   el.onauxclick = (e) => { if (e.button === 1) closeTab(tab); };
   tab.el = el;
+
+  tabs.push(tab);
+  $('#tabList').appendChild(el);
+  mountWebview(tab, url);
+  $('#webEmpty').hidden = true;
+  renderTab(tab);
+  if (activate) activateTab(tab);
+  return tab;
+}
+
+// Fila adormita: webview-ul e distrus (elibereaza memoria) si se recreeaza la revenire
+function sleepTab(tab) {
+  if (tab.sleeping || tab === activeTab || tab.playing) return;
+  tab.sleeping = true;
+  tab.wv.remove();
+  tab.wv = null;
+  tab.el.classList.add('sleeping');
+}
+function wakeTab(tab) {
+  if (!tab.sleeping) return;
+  tab.sleeping = false;
+  tab.el.classList.remove('sleeping');
+  mountWebview(tab, tab.url);
+}
+setInterval(() => {
+  if (settings.tabSleep === false) return;
+  const limit = (settings.lowPowerActive ? 5 : 10) * 60e3;
+  tabs.forEach((t) => { if (t !== activeTab && !t.playing && Date.now() - t.lastActive > limit) sleepTab(t); });
+}, 60e3);
+
+function mountWebview(tab, url) {
+  const wv = document.createElement('webview');
+  wv.setAttribute('partition', 'persist:arta-web');
+  wv.setAttribute('allowpopups', '');
+  wv.setAttribute('webpreferences', 'backgroundThrottling=yes, spellcheck=no');
+  wv.setAttribute('src', url);
+  tab.wv = wv;
+  $('#webviews').appendChild(wv);
 
   wv.addEventListener('page-title-updated', (e) => { tab.title = e.title; renderTab(tab); });
   wv.addEventListener('page-favicon-updated', (e) => { tab.favicon = e.favicons?.[0] || null; renderTab(tab); });
@@ -234,14 +268,7 @@ function createTab(url, { activate = true } = {}) {
   wv.addEventListener('did-fail-load', (e) => {
     if (e.isMainFrame && e.errorCode !== -3) toast(`Pagina nu s-a putut încărca (${e.errorDescription || e.errorCode}). Verifică internetul.`, 'err');
   });
-
-  tabs.push(tab);
-  $('#tabList').appendChild(el);
-  $('#webviews').appendChild(wv);
-  $('#webEmpty').hidden = true;
-  renderTab(tab);
-  if (activate) activateTab(tab);
-  return tab;
+  if (tab === activeTab) wv.classList.add('active');
 }
 
 function renderTab(tab) {
@@ -263,10 +290,13 @@ function renderTab(tab) {
 }
 
 function activateTab(tab) {
+  if (activeTab) activeTab.lastActive = Date.now();
   activeTab = tab;
+  tab.lastActive = Date.now();
+  wakeTab(tab);
   tabs.forEach((t) => {
     t.el.classList.toggle('active', t === tab);
-    t.wv.classList.toggle('active', t === tab);
+    t.wv?.classList.toggle('active', t === tab);
   });
   syncToolbar();
   updateNavActive();
@@ -278,7 +308,7 @@ function closeTab(tab) {
   if (i < 0) return;
   tabs.splice(i, 1);
   tab.el.remove();
-  tab.wv.remove();
+  tab.wv?.remove();
   if (activeTab === tab) {
     activeTab = null;
     const next = tabs[i] || tabs[i - 1];
@@ -289,7 +319,7 @@ function closeTab(tab) {
 
 function syncToolbar() {
   const t = activeTab;
-  const ready = t && t.wv.isConnected && typeof t.wv.canGoBack === 'function';
+  const ready = t && t.wv?.isConnected && typeof t.wv.canGoBack === 'function';
   let canBack = false, canFwd = false;
   try { canBack = ready && t.wv.canGoBack(); canFwd = ready && t.wv.canGoForward(); } catch { /* webview inca neatasat */ }
   $('#navBack').disabled = !canBack;
@@ -397,11 +427,21 @@ $('#btSettings').onclick = () => ag.openExternal('ms-settings:bluetooth');
 async function loadRemote(regenerate = false) {
   try {
     const r = await ag.remoteInfo(regenerate);
+    settings.remoteToken = new URLSearchParams(new URL(r.url).hash.slice(1)).get('k') || settings.remoteToken;
     $('#qrBox').innerHTML = r.qr;
     $('#remoteUrl').textContent = r.url;
-    $('#statRemote').textContent = `${r.ip}:${r.port}`;
+    $('#setGlobal').checked = !!r.globalAccess;
+    const t = r.tunnel;
+    const st = !r.globalAccess ? ['off', 'Doar pe Wi-Fi-ul restaurantului'] :
+      t.status === 'online' ? ['on', 'Online de oriunde · date mobile și Wi-Fi'] :
+      t.status === 'error' ? ['err', t.error || 'Eroare la conectare'] : ['wait', t.error || 'Se conectează la internet…'];
+    $('#netStatus').className = `net-status ${st[0]}`;
+    $('#netStatus').textContent = st[1];
+    $('#statRemote').textContent = r.globalAccess && t.status === 'online' ? 'Online de oriunde' : `Wi-Fi ${r.ip}`;
   } catch (e) { $('#remoteUrl').textContent = e.message; }
 }
+$('#setGlobal').onchange = async (e) => { settings = await ag.setSettings({ globalAccess: e.target.checked }); loadRemote(); };
+ag.on('tunnel:status', () => { loadRemote(); window.posTunnelChanged?.(); });
 $('#remoteRegen').onclick = async () => { await loadRemote(true); toast('Cod nou generat. Scanează din nou QR-ul.', 'ok'); };
 
 // ---------- Ghiduri ----------
@@ -439,6 +479,30 @@ function bindSettings() {
     toast('Pagina de start a fost salvată.', 'ok');
   };
   $('#setHomeUrl').onblur = () => $('#homeUrlForm').requestSubmit();
+
+  // viteza
+  const applyPerf = () => {
+    document.body.classList.toggle('lite', !!settings.lowPowerActive);
+    $$('#lowPowerToggle [data-lp]').forEach((b) => b.classList.toggle('on', b.dataset.lp === settings.lowPower));
+    $('#setAdblock').checked = settings.adblock !== false;
+    $('#setH264').checked = settings.h264 !== false;
+    $('#setTabSleep').checked = settings.tabSleep !== false;
+    $('#btnShield').classList.toggle('off', settings.adblock === false);
+  };
+  const savePerf = async (patch) => { settings = await ag.setSettings(patch); applyPerf(); };
+  $$('#lowPowerToggle [data-lp]').forEach((b) => (b.onclick = () => savePerf({ lowPower: b.dataset.lp })));
+  $('#setAdblock').onchange = (e) => savePerf({ adblock: e.target.checked });
+  $('#setH264').onchange = (e) => savePerf({ h264: e.target.checked });
+  $('#setTabSleep').onchange = (e) => savePerf({ tabSleep: e.target.checked });
+  $('#btnShield').onclick = async () => {
+    await savePerf({ adblock: settings.adblock === false });
+    toast(settings.adblock ? 'Blocantul de reclame este pornit. Reîncarcă pagina.' : 'Blocantul de reclame este oprit.', 'ok');
+  };
+  ag.on('adblock:count', (n) => { $('#shieldCount').textContent = n > 999 ? `${Math.floor(n / 1000)}k` : n; });
+  applyPerf();
+  ag.perfInfo().then((p) => {
+    $('#perfInfo').textContent = `Acest calculator: ${p.memGb} GB RAM, ${p.cpus} nuclee${p.weakPc ? ' — detectat ca slab, modul economic automat este activ' : ''}.`;
+  });
 }
 
 async function loadAbout() {
@@ -466,10 +530,11 @@ $('#btnMinimize').onclick = () => ag.minimize();
   mountGuides();
   tickClock();
   setInterval(tickClock, 10000);
+  window.posInit?.();
   refreshVolume();
-  setInterval(refreshVolume, 4000);
+  setInterval(() => { if (!document.hidden) refreshVolume(); }, 8000);
   loadDevices();
-  setInterval(loadDevices, 15000);
+  setInterval(() => { if (!document.hidden) loadDevices(); }, 60000);
   loadRemote();
   loadBt();
   loadAbout();

@@ -14,8 +14,22 @@ contextBridge.exposeInMainWorld('ag', {
   minimize: () => ipcRenderer.invoke('window:minimize'),
   quit: () => ipcRenderer.invoke('app:quit'),
   appInfo: () => ipcRenderer.invoke('app:info'),
+  perfInfo: () => ipcRenderer.invoke('perf:info'),
+  pos: async (method, params) => {
+    const r = await ipcRenderer.invoke('pos:rpc', method, params);
+    if (!r.ok) throw new Error(r.error);
+    return r.result;
+  },
+  posData: {
+    info: () => ipcRenderer.invoke('pos:data-info'),
+    backupNow: () => ipcRenderer.invoke('pos:backup-now'),
+    openFolder: () => ipcRenderer.invoke('pos:open-folder'),
+    export: () => ipcRenderer.invoke('pos:export'),
+    import: () => ipcRenderer.invoke('pos:import'),
+    restore: (name) => ipcRenderer.invoke('pos:restore', name),
+  },
   on: (channel, cb) => {
-    const allowed = ['browser:open-tab', 'browser:shortcut','remote:navigate', 'volume:changed', 'window:fullscreen'];
+    const allowed = ['pos:event', 'adblock:count', 'tunnel:status','browser:open-tab', 'browser:shortcut', 'remote:navigate', 'volume:changed', 'window:fullscreen'];
     if (allowed.includes(channel)) ipcRenderer.on(channel, (_e, ...args) => cb(...args));
   },
 });

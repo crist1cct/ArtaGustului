@@ -6,6 +6,7 @@
   <title>Arta Gustului Media</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="guide.css">
+  <link rel="stylesheet" href="pos.css">
 </head>
 <body>
   <aside class="rail">
@@ -18,6 +19,7 @@
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-view="home"><span data-icon="home"></span><b>Acasă</b></button>
+      <button class="nav-btn nav-casa" data-view="casa"><span data-icon="register"></span><b>Casă</b></button>
       <button class="nav-btn" data-site="spotify"><span data-icon="spotify"></span><b>Spotify</b></button>
       <button class="nav-btn" data-site="youtube"><span data-icon="youtube"></span><b>YouTube</b></button>
       <button class="nav-btn" data-view="browser"><span data-icon="globe"></span><b>Browser</b></button>
@@ -36,9 +38,6 @@
       </svg>
       <span>PORTABLE</span>
     </button>
-    <div class="rail-actions">
-      <button class="icon-btn" id="btnFullscreen" title="Ecran complet (F11)"><span data-icon="shrink"></span></button>
-    </div>
   </aside>
 
   <main class="main">
@@ -54,6 +53,7 @@
           <span class="vol-val" id="volVal">50</span>
         </div>
         <div class="clock" id="clock">--:--</div>
+        <button class="icon-btn" id="btnFullscreen" title="Ecran complet (F11)"><span data-icon="shrink"></span></button>
         <button class="exit-btn" id="btnQuit" title="Închide aplicația"><span data-icon="power"></span>Ieșire</button>
       </div>
     </header>
@@ -71,12 +71,12 @@
             <button class="tile t-spotify" data-site="spotify"><span data-icon="spotify"></span><b>Spotify</b><small>Playlisturi pentru sală</small></button>
             <button class="tile t-youtube" data-site="youtube"><span data-icon="youtube"></span><b>YouTube</b><small>Muzică și video</small></button>
             <button class="tile" data-view="phone"><span data-icon="phone"></span><b>De pe telefon</b><small>Bluetooth · Spotify Connect</small></button>
-            <button class="tile" data-view="browser"><span data-icon="globe"></span><b>Browser</b><small>Internet · extensii</small></button>
+            <button class="tile t-casa" data-view="casa"><span data-icon="register"></span><b>Casă</b><small id="tileCasa">Cecuri · total · rest</small></button>
+            <button class="tile" data-view="browser"><span data-icon="globe"></span><b>Browser</b><small>Internet · fără reclame</small></button>
             <button class="tile" data-view="settings" data-scroll="audio"><span data-icon="speaker"></span><b>Ieșire audio</b><small id="tileOutput">Alege difuzoarele</small></button>
-            <button class="tile" data-view="info"><span data-icon="info"></span><b>Info</b><small>Cum funcționează totul</small></button>
           </div>
           <div class="status-row">
-            <div class="stat"><span data-icon="plug"></span><div><small>Conexiune LG</small><b>Cablu → PORTABLE</b></div></div>
+            <button class="stat stat-btn" data-view="casa"><span data-icon="cash"></span><div><small>Casa azi</small><b id="statCasa">0 lei · 0 cecuri</b></div></button>
             <div class="stat"><span data-icon="bluetooth"></span><div><small>Telefon</small><b id="statPhone">Neconectat</b></div></div>
             <div class="stat"><span data-icon="wifi"></span><div><small>Telecomandă</small><b id="statRemote">—</b></div></div>
           </div>
@@ -87,6 +87,128 @@
             <button class="btn ghost" data-view="guide">Ghid complet</button>
           </div>
           <div id="homeGuide"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CASA -->
+    <section class="view" id="view-casa">
+      <div class="pos">
+        <nav class="pos-tabs">
+          <button class="pos-tab on" data-pane="board"><span data-icon="home"></span>Panou</button>
+          <button class="pos-tab" data-pane="sale"><span data-icon="register"></span>Vânzare pe PC</button>
+          <button class="pos-tab" data-pane="menu" data-admin><span data-icon="edit"></span>Meniu</button>
+          <button class="pos-tab" data-pane="tables" data-admin><span data-icon="table"></span>Mese</button>
+          <button class="pos-tab" data-pane="report"><span data-icon="chart"></span>Raport</button>
+          <button class="pos-tab" data-pane="data" data-admin><span data-icon="database"></span>Date & copii</button>
+          <span class="pos-tabs-right" id="posPhones"></span>
+        </nav>
+
+        <div class="pos-pane on" data-pane="board">
+          <div class="board">
+            <div class="board-bg" id="boardBg" aria-hidden="true"></div>
+            <header class="board-head">
+              <div class="board-time">
+                <p class="eyebrow">Arta Gustului · Casa</p>
+                <h1 id="bClock">--:--</h1>
+                <p class="muted" id="bDate"></p>
+              </div>
+              <div class="board-stats">
+                <div><small>Încasat azi</small><b id="bToday">0 lei</b></div>
+                <div><small>Cecuri închise</small><b id="bCount">0</b></div>
+                <div class="hl"><small>Cecuri active</small><b id="bOpen">0</b></div>
+              </div>
+            </header>
+            <div class="board-body">
+              <section class="board-checks" id="bChecks"></section>
+              <aside class="board-pay" id="bPay"></aside>
+            </div>
+          </div>
+        </div>
+
+        <div class="pos-pane" data-pane="sale">
+          <div class="sale">
+            <div class="sale-left">
+              <div class="checks-strip" id="checksStrip"></div>
+              <div class="sale-body">
+                <div class="cat-list" id="catList"></div>
+                <div class="prod-area">
+                  <div class="prod-search"><span data-icon="search"></span><input id="prodSearch" placeholder="Caută produs… (sau scrie direct)" spellcheck="false"></div>
+                  <div class="prod-grid" id="prodGrid"></div>
+                </div>
+              </div>
+            </div>
+            <aside class="ticket" id="ticket"></aside>
+          </div>
+        </div>
+
+        <div class="pos-pane" data-pane="menu">
+          <div class="menu-edit">
+            <div class="me-cats">
+              <div class="me-head"><h2>Categorii</h2><button class="btn sm" id="catAdd"><span data-icon="plus"></span>Adaugă</button></div>
+              <div id="meCatList" class="me-cat-list"></div>
+              <div class="me-sort card">
+                <h3><span data-icon="sparkle"></span>Ordonare automată</h3>
+                <p class="muted">Produsele cele mai des comandate urcă primele. Contează în câte cecuri apare produsul, nu cantitatea.</p>
+                <div class="seg-toggle" id="autoSortToggle">
+                  <button data-sort="daily">Zilnic</button><button data-sort="orders">La fiecare N cecuri</button><button data-sort="off">Oprit</button>
+                </div>
+                <label class="inline-field" id="resortEveryRow">N = <input type="number" id="resortEvery" min="5" max="500" class="text-input sm"></label>
+                <button class="btn ghost sm" id="resortNow"><span data-icon="reload"></span>Reordonează acum</button>
+                <p class="muted small" id="lastResort"></p>
+              </div>
+            </div>
+            <div class="me-prods">
+              <div class="me-head"><h2 id="meProdTitle">Produse</h2>
+                <div class="row"><div class="prod-search sm"><span data-icon="search"></span><input id="meSearch" placeholder="Caută" spellcheck="false"></div>
+                <button class="btn" id="prodAdd"><span data-icon="plus"></span>Produs nou</button></div></div>
+              <div id="meProdList" class="me-prod-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pos-pane" data-pane="tables">
+          <div class="page narrow">
+            <div class="me-head"><div><h2>Mese</h2><p class="muted">Apar pe telefon și pe casă. Zona ajută la grupare (Sală, Terasă, Bar…).</p></div>
+              <button class="btn" id="tableAdd"><span data-icon="plus"></span>Masă nouă</button></div>
+            <div id="tableList" class="table-list"></div>
+          </div>
+        </div>
+
+        <div class="pos-pane" data-pane="report">
+          <div class="page">
+            <div class="me-head">
+              <div class="row"><button class="icon-btn" id="repPrev"><span data-icon="back"></span></button><h2 id="repDay">Azi</h2><button class="icon-btn" id="repNext"><span data-icon="forward"></span></button></div>
+            </div>
+            <div id="report"></div>
+          </div>
+        </div>
+
+        <div class="pos-pane" data-pane="data">
+          <div class="page">
+            <div class="data-cards">
+              <div class="data-card"><span data-icon="database"></span><b>Bază integrată</b><p>Un singur fișier local, fără server și fără internet.</p></div>
+              <div class="data-card"><span data-icon="reload"></span><b>Copii automate</b><p>La pornire, la fiecare oră cu modificări și la închidere.</p></div>
+              <div class="data-card"><span data-icon="folder"></span><b>Două locuri</b><p>În folderul aplicației și în Documente. Nu se șterg la dezinstalare.</p></div>
+              <div class="data-card"><span data-icon="usb"></span><b>Transfer pe alt PC</b><p>Exportă un fișier .agdb, apoi importă-l pe celălalt calculator.</p></div>
+            </div>
+            <div class="card">
+              <div class="card-head"><div><h2>Unde sunt datele</h2><p class="muted mono" id="dataDir"></p></div>
+                <div class="row"><button class="btn ghost" id="dataOpen"><span data-icon="folder"></span>Deschide folderul</button><button class="btn" id="dataBackup"><span data-icon="check"></span>Copie acum</button></div></div>
+              <div class="row">
+                <button class="btn big" id="dataExport"><span data-icon="usb"></span>Exportă pentru alt calculator</button>
+                <button class="btn ghost big" id="dataImport"><span data-icon="folder"></span>Importă dintr-un fișier</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><div><h2>Copii de rezervă</h2><p class="muted">Restaurarea păstrează întâi datele actuale într-o copie nouă.</p></div></div>
+              <div id="backupList" class="backup-list"></div>
+            </div>
+            <div class="card">
+              <div class="card-head"><div><h2>PIN administrator</h2><p class="muted">Protejează meniul, mesele și datele. Lasă gol pentru fără PIN.</p></div></div>
+              <form class="row" id="pinForm"><input class="text-input sm" id="pinNew" type="password" inputmode="numeric" maxlength="8" placeholder="PIN nou (cifre)"><button class="btn ghost">Salvează PIN</button></form>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -112,6 +234,7 @@
             <button class="bm" data-site="youtube"><span data-icon="youtube"></span>YouTube</button>
             <button class="bm" data-url="https://music.youtube.com"><span data-icon="music"></span>YT Music</button>
           </div>
+          <button class="shield" id="btnShield" title="Blocant de reclame integrat (clic: pornește / oprește)"><span data-icon="shield"></span><b id="shieldCount">0</b></button>
           <button class="icon-btn" id="btnExt" title="Extensii"><span data-icon="puzzle"></span></button>
         </div>
         <div class="webviews" id="webviews">
@@ -187,12 +310,14 @@
 
           <article class="card method">
             <div class="qr-wrap"><div class="qr" id="qrBox"></div></div>
-            <h3><span data-icon="qr"></span> Telecomandă din telefon</h3>
+            <h3><span data-icon="qr"></span> Aplicația ospătarului</h3>
             <ol class="steps">
-              <li><b>1</b><span>Telefonul trebuie să fie pe <i>aceeași rețea Wi-Fi</i> ca laptopul.</span></li>
-              <li><b>2</b><span>Scanează codul QR cu camera telefonului.</span></li>
-              <li><b>3</b><span>Controlezi volumul, pauza și melodia următoare.</span></li>
+              <li><b>1</b><span>Merge de pe <i>date mobile</i> sau orice Wi-Fi (cu „Acces de oriunde” pornit). Laptopul trebuie să aibă internet.</span></li>
+              <li><b>2</b><span>Scanează codul QR cu camera telefonului, apoi <i>Adaugă pe ecranul principal</i>.</span></li>
+              <li><b>3</b><span>Iei comenzi pe mese, deschizi cecuri, încasezi cu rest și controlezi muzica.</span></li>
             </ol>
+            <div class="net-status" id="netStatus"></div>
+            <label class="switch-row" style="border:0;padding:4px 0"><span><b>Acces de oriunde</b><small>Telefoanele se conectează și de pe date mobile (tunel securizat HTTPS).</small></span><input type="checkbox" id="setGlobal"><i></i></label>
             <p class="muted mono" id="remoteUrl"></p>
           </article>
         </div>
@@ -300,6 +425,17 @@
           <div class="ext-list" id="extList"></div>
         </div>
 
+        <div class="card" id="sec-perf">
+          <div class="card-head"><div><h2>Viteză (calculator slab)</h2><p class="muted" id="perfInfo"></p></div></div>
+          <div class="settings-grid">
+            <div class="switch-row"><span><b>Mod economic</b><small>Fără efecte grafice, animațiile rulează doar când se văd.</small></span>
+              <div class="seg-toggle" id="lowPowerToggle"><button data-lp="auto">Automat</button><button data-lp="on">Pornit</button><button data-lp="off">Oprit</button></div></div>
+            <label class="switch-row"><span><b>Blocant de reclame</b><small>Integrat în browser: pagini mai rapide, fără reclame (și pe YouTube).</small></span><input type="checkbox" id="setAdblock"><i></i></label>
+            <label class="switch-row"><span><b>YouTube în H.264</b><small>Video decodat de placa video — mult mai puțin procesor. Se aplică la reîncărcare.</small></span><input type="checkbox" id="setH264"><i></i></label>
+            <label class="switch-row"><span><b>Adoarme filele nefolosite</b><small>Filele fără muzică, neatinse 10 minute, eliberează memoria.</small></span><input type="checkbox" id="setTabSleep"><i></i></label>
+          </div>
+        </div>
+
         <div class="card">
           <div class="card-head"><div><h2>Aplicație</h2></div></div>
           <div class="settings-grid">
@@ -348,10 +484,14 @@
     </div>
   </div>
 
+  <div class="overlay" id="modal" hidden><div class="overlay-card modal-card" id="modalCard"></div></div>
+
   <div class="toasts" id="toasts"></div>
 
   <script src="icons.js"></script>
+  <script src="product-icons.js"></script>
   <script src="guide.js"></script>
   <script src="app.js"></script>
+  <script src="pos.js"></script>
 </body>
 </html>

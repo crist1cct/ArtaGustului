@@ -292,7 +292,7 @@
           bar.style.width = '100%';
         }
       });
-      if (playing) advanceTimer = setTimeout(() => go(current + 1), STEP_MS);
+      if (playing && visible) advanceTimer = setTimeout(() => go(current + 1), STEP_MS);
     }
 
     function setPlaying(v) {
@@ -301,6 +301,16 @@
       host.classList.toggle('paused', !playing);
       go(current);
     }
+
+    // ruleaza doar cand ghidul se vede pe ecran (economie de procesor)
+    let visible = true;
+    new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting === visible) return;
+      visible = entry.isIntersecting;
+      host.classList.toggle('offscreen', !visible);
+      if (visible) go(current);
+      else { timers.forEach(clearTimeout); clearTimeout(advanceTimer); }
+    }).observe(host);
 
     render();
     return {
